@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+from googletrans import Translator
 
-
+translator = Translator()
 
 base_link = "https://quotes.toscrape.com/page/{}/"
 for page in range(1,11):
@@ -15,9 +16,11 @@ for page in range(1,11):
         print(f'Страница: {page}')
         print('----------------------------------------------------------------------------------')
         for quote in quotes:
-            text = quote.find('span', class_="text").text
-            author = quote.find('small', class_="author").text
-            print(f'Цитата: {text}', f'Aвтор: {author}', sep = '\n', end = '\n\n')
+            text = str(quote.find('span', class_="text").text)
+            translation_text = translator.translate(text, src='en', dest="ru").text
+            author = str(quote.find('small', class_="author").text)
+            translation_author = translator.translate(author, src='en', dest="ru").text
+            print(f'Цитата: {translation_text}', f'Aвтор: {translation_author}', sep = '\n', end = '\n\n')
 
     else:
         print(f"Ошибка при запросе страницы {page}:", response.status_code)
